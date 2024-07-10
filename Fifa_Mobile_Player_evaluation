@@ -1,0 +1,157 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "7e8bf9c5",
+   "metadata": {
+    "_cell_guid": "b1076dfc-b9ad-4769-8c92-a6c4dae69d19",
+    "_uuid": "8f2839f25d086af736a60e9eeb907d3b93b6e0e5",
+    "execution": {
+     "iopub.execute_input": "2024-07-10T19:15:14.657507Z",
+     "iopub.status.busy": "2024-07-10T19:15:14.657116Z",
+     "iopub.status.idle": "2024-07-10T19:15:16.902707Z",
+     "shell.execute_reply": "2024-07-10T19:15:16.901365Z"
+    },
+    "papermill": {
+     "duration": 2.252368,
+     "end_time": "2024-07-10T19:15:16.905556",
+     "exception": false,
+     "start_time": "2024-07-10T19:15:14.653188",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The best player to choose in terms of overall attributes is:\n",
+      "name                 BLAKE\n",
+      "country_origin     Jamaica\n",
+      "age                     33\n",
+      "overall                0.0\n",
+      "diving                 1.0\n",
+      "positioning            1.0\n",
+      "handling               0.0\n",
+      "refliexes              1.0\n",
+      "kicking           0.636364\n",
+      "physical               0.0\n",
+      "price                  0.0\n",
+      "total_score       3.636364\n",
+      "Name: 4, dtype: object\n",
+      "The WORST player to choose in terms of overall attributes is:\n",
+      "UNAI\n"
+     ]
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "from sklearn.preprocessing import MinMaxScaler\n",
+    "\n",
+    "# ***To evaluate any player uncomment attribute and Data and then run the notebook.***\n",
+    "\n",
+    "\n",
+    "# Any players' attributes = LB, LW, CB, RB, RW, CAM, CM, CF, ST\n",
+    "# data = {\n",
+    "#     'name': ['UDOL', 'SHAW', 'DIMARCI', 'RYERSON', 'NUNO'],\n",
+    "#     'country_origin': ['France', 'England', 'Italy', 'Norway', 'Portugal'],\n",
+    "#     'age': [28, 28, 26, 26, 22],\n",
+    "#     'overall': [90, 90, 90, 90, 90],\n",
+    "#     'pace': [90, 83, 90, 87, 97],\n",
+    "#     'shooting': [54, 61, 75, 62, 62],\n",
+    "#     'passing': [76, 85, 87, 75, 79],\n",
+    "#     'dribbling': [88, 84, 91, 86, 87],\n",
+    "#     'defending': [85, 86, 79, 82, 82],\n",
+    "#     'physical': [82, 85, 72, 84, 79],\n",
+    "#     'price': [2090000, 2010000, 2290000, 2260000, 2700000]  \n",
+    "# }\n",
+    "\n",
+    "# Only Goal Keepers' attributes\n",
+    "data = {\n",
+    "    'name': ['UNAI', 'SZCZESNY', 'MIKE', 'NEUR', 'BLAKE'],\n",
+    "    'country_origin': ['Spain', 'Poland', 'France', 'Germany', 'Jamaica'],\n",
+    "    'age': [27, 34, 29, 38, 33],\n",
+    "    'overall': [92, 92, 92, 92, 92],\n",
+    "    'diving': [92, 92, 90, 89, 96],\n",
+    "    'positioning': [92, 92, 90, 93, 97],\n",
+    "    'handling': [88, 89, 87, 90, 87],\n",
+    "    'refliexes': [93, 93, 94, 89, 98],\n",
+    "    'kicking': [84, 84, 92, 95, 91],\n",
+    "    'physical': [82, 82, 84, 83, 81],\n",
+    "    'price': [4480000, 4480000, 4480000, 4480000, 4480000]  \n",
+    "}\n",
+    "\n",
+    "reviews = pd.DataFrame(data)\n",
+    "\n",
+    "# # Define the attributes we want to consider\n",
+    "# attributes = ['overall', 'pace', 'shooting', 'passing', 'dribbling', 'defending', 'physical']\n",
+    "\n",
+    "# Define the attributes we want to consider = GoalKeeper_attributes\n",
+    "attributes = ['overall', 'diving', 'positioning', 'handling', 'refliexes', 'kicking', 'physical']\n",
+    "\n",
+    "# Normalize the attribute values and price\n",
+    "scaler = MinMaxScaler()\n",
+    "reviews[attributes + ['price']] = scaler.fit_transform(reviews[attributes + ['price']])\n",
+    "\n",
+    "# Calculate the total score considering attributes and price\n",
+    "# Higher attribute values are better, so we keep them as they are\n",
+    "# Lower price is better, so we subtract the normalized price from 1\n",
+    "reviews['total_score'] = reviews[attributes].sum(axis=1) - reviews['price']\n",
+    "\n",
+    "# Find the player with the highest total score\n",
+    "best_player = reviews.loc[reviews['total_score'].idxmax()]\n",
+    "\n",
+    "# Find the player with the highest total score\n",
+    "worst_player = reviews.loc[reviews['total_score'].idxmin()]\n",
+    "\n",
+    "print(f\"The best player to choose in terms of overall attributes is:\\n{best_player}\")\n",
+    "\n",
+    "print(f\"The WORST player to choose in terms of overall attributes is:\\n{worst_player['name']}\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kaggle": {
+   "accelerator": "none",
+   "dataSources": [],
+   "dockerImageVersionId": 30732,
+   "isGpuEnabled": false,
+   "isInternetEnabled": true,
+   "language": "python",
+   "sourceType": "notebook"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.13"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 6.028711,
+   "end_time": "2024-07-10T19:15:17.531050",
+   "environment_variables": {},
+   "exception": null,
+   "input_path": "__notebook__.ipynb",
+   "output_path": "__notebook__.ipynb",
+   "parameters": {},
+   "start_time": "2024-07-10T19:15:11.502339",
+   "version": "2.5.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
