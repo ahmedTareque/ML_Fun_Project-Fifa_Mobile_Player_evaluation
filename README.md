@@ -7,8 +7,3 @@ Concept is pretty simple. I wanted to buy players in my fifa mobile app but I go
 
 
 
-
-
-## Feel free to fork the project. Fill up with your selective players in the data section and run in notebook.
-
-
